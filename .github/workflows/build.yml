@@ -43,7 +43,27 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
+      - name: Get pip cache dir
+        shell: bash
+        id: pip-cache-and-time
+        run: |
+           echo "::set-output name=dir::$(pip cache dir)"
+           echo "::set-output name=date::$(/bin/date -u "+%m%Y")"
+      - name: pip cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache-and-time.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python }}-${{ steps.pip-cache-and-time.outputs.date }}
+      - name: Cache Windows
+        id: cache-windows
+        if: runner.os == 'Windows'
+        uses: actions/cache@v2
+        with:
+         path: ${{ github.workspace }}\ManimCache
+         key: ${{ runner.os }}-dependencies-ffmpeg-sox-tinytex-${{ hashFiles('.github/manimdependency.json') }}-${{ steps.pip-cache-and-time.outputs.date }}
+
       - name: Install Manim
+        if: runner.os == 'Windows' && steps.cache-windows.outputs.cache-hit != 'true'
         run: |
           $soxVersion = python -c "import json;print(json.load(open('.github/manimdependency.json'))['windows']['sox'])"
           $soxVersionNumber = python -c "import json;print(json.load(open('.github/manimdependency.json'))['windows']['sox'].split('-')[1])"
@@ -63,6 +83,16 @@ jobs:
           choco install --no-progress ffmpeg
           $env:Path += ";" + "$($PWD)\ManimCache\LatexWindows\TinyTeX\bin\win32"
           $env:Path += ";" + "$($PWD)\ManimCache\SoX"
+          $env:Path += ";" + "$($PWD)\pango\bin"
+          $env:Path += ";" + "$($PWD)\pango"
+          echo "::set-env name=Path::$env:Path"
+      - name: Add Windows dependecies to path
+        if: runner.os == 'Windows'
+        run: |
+          $env:Path += ";" + "$($PWD)\ManimCache\FFmpeg\bin"
+          $env:Path += ";" + "$($PWD)\ManimCache\LatexWindows\TinyTeX\bin\win32"
+          $env:Path += ";" + "$($PWD)\ManimCache\SoX"
+          $env:Path = "$env:USERPROFILE\.poetry\bin;$($env:PATH)"
           $env:Path += ";" + "$($PWD)\pango\bin"
           $env:Path += ";" + "$($PWD)\pango"
           echo "::set-env name=Path::$env:Path"
