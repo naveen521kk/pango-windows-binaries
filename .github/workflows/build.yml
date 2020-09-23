@@ -101,10 +101,10 @@ jobs:
         env:
           POETRY_VIRTUALENVS_CREATE: $false
         run: |
+          where libpango*
           pip install poetry
           poetry install
           poetry run pytest
-          where libpango*
           curl -l https://github.com/naveen521kk/manim/raw/pango-text/example_scenes/pangoText.py -o testpan.py
           poetry run manim testpan.py
  
