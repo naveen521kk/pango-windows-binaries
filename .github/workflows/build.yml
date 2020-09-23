@@ -103,11 +103,7 @@ jobs:
         run: |
           where libpango*
           pip install poetry
-          poetry install
-          poetry run pytest
-          curl -l https://github.com/naveen521kk/manim/raw/pango-text/example_scenes/pangoText.py -o testpan.py
-          poetry run manim testpan.py
- 
+          
       - uses: actions/upload-artifact@v2
         with:
          name: media.${{ matrix.msystem }}
