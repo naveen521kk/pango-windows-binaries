@@ -24,8 +24,14 @@ jobs:
           update: true
       - shell: msys2 {0}
         env:
-          msystem: ${{ matrix.msystem }}
+          MSYSTEM: ${{ matrix.msystem }}
         run: |
           mkdir "pango"
-          dir "/${msystem}/bin"
-          mv "/${msystem}/bin" "pango"
+          dir "/${MSYSTEM}/bin"
+          mv "/${MSYSTEM}/bin" "pango"
+          dir "/${MSYSTEM}"
+
+      - uses: actions/upload-artifact@v2
+        with:
+         name: binfolder
+         path: pango
