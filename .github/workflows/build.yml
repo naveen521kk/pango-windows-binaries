@@ -98,6 +98,7 @@ jobs:
       - name: Add Windows dependecies to path
         if: runner.os == 'Windows'
         run: |
+          choco install --no-progress ffmpeg
           $env:Path += ";" + "$($PWD)\ManimCache\FFmpeg\bin"
           $env:Path += ";" + "$($PWD)\ManimCache\LatexWindows\TinyTeX\bin\win32"
           $env:Path += ";" + "$($PWD)\ManimCache\SoX"
