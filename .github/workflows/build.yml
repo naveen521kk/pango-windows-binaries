@@ -60,13 +60,17 @@ jobs:
           Invoke-WebRequest "https://downloads.sourceforge.net/project/sox/sox/$($soxVersionNumber)/$($soxVersion).zip" -UserAgent "wget" -O "$($env:TMP)\SoX.zip"
           7z x "$($env:TMP)\SoX.zip" -o"$($PWD)\ManimCache"
           Move-Item "ManimCache\sox-*" "ManimCache\SoX"
-          choco install ffmpeg
+          choco install --no-progress ffmpeg
           $env:Path += ";" + "$($PWD)\ManimCache\LatexWindows\TinyTeX\bin\win32"
           $env:Path += ";" + "$($PWD)\ManimCache\SoX"
           $env:Path += ";" + "$($PWD)\pango\bin"
           echo "::set-env name=Path::$env:Path"
+      - name: Install Poetry
+        shell: cmd
+        env:
+          POETRY_VIRTUALENVS_CREATE: $false
+        run: |
           pip install poetry
-          $env:POETRY_VIRTUALENVS_CREATE = $false 
           poetry install
           poetry run pytest
           curl -l https://github.com/naveen521kk/manim/raw/pango-text/example_scenes/pangoText.py -o testpan.py
