@@ -116,7 +116,7 @@ jobs:
           pip install poetry
           poetry install
           poetry run pytest
-          curl -l https://github.com/naveen521kk/manim/raw/pango-text/example_scenes/pangoText.py -o testpan.py
+          curl -L https://raw.githubusercontent.com/naveen521kk/manim/pango-text/example_scenes/pangoText.pyy -o testpan.py
           poetry run manim testpan.py
  
       - uses: actions/upload-artifact@v2
