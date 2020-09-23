@@ -33,5 +33,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-         name: binfolder
+         name: pango.${{ matrix.msystem }}
          path: pango
