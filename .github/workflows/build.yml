@@ -28,7 +28,8 @@ jobs:
         env:
           MSYSTEM: ${{ matrix.msystem }}
         run: |
-          mv "/${MSYSTEM}/bin" "pango"
+          mkdir pango
+          mv "/${MSYSTEM}/bin/*.dll" "pango"
           dir pango
           dir "/${MSYSTEM}"
           cmd.exe /C "echo %cd%"
