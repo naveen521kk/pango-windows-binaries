@@ -25,10 +25,10 @@ jobs:
         env:
           MSYSTEM: ${{ matrix.msystem }}
         run: |
-          dir "/${MSYSTEM}/bin"
           mv "/${MSYSTEM}/bin" "pango"
           dir pango
           dir "/${MSYSTEM}"
+          cmd.exe /C "echo %cd%"
 
       - uses: actions/upload-artifact@v2
         with:
@@ -92,18 +92,19 @@ jobs:
           $env:Path += ";" + "$($PWD)\ManimCache\FFmpeg\bin"
           $env:Path += ";" + "$($PWD)\ManimCache\LatexWindows\TinyTeX\bin\win32"
           $env:Path += ";" + "$($PWD)\ManimCache\SoX"
-          $env:Path = "$env:USERPROFILE\.poetry\bin;$($env:PATH)"
           $env:Path += ";" + "$($PWD)\pango\bin"
-          $env:Path += ";" + "$($PWD)\pango"
+          $env:PATH = "$env:GITHUB_WORKSPACE\pango;$env:PATH"
           echo "::set-env name=Path::$env:Path"
       - name: Install Poetry
         shell: cmd
         env:
           POETRY_VIRTUALENVS_CREATE: $false
         run: |
-          where libpango*
+          where libcairo*
+          where sox
+          where latex
           pip install poetry
-          #poetry install
+          poetry install
           poetry run pytest
           curl -l https://github.com/naveen521kk/manim/raw/pango-text/example_scenes/pangoText.py -o testpan.py
           poetry run manim testpan.py
