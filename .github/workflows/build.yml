@@ -20,14 +20,14 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           install: mingw-w64-${{ matrix.arch }}-pango
-          update: true
+
       - shell: msys2 {0}
         env:
           MSYSTEM: ${{ matrix.msystem }}
         run: |
-          mkdir "pango"
           dir "/${MSYSTEM}/bin"
           mv "/${MSYSTEM}/bin" "pango"
+          dir pango
           dir "/${MSYSTEM}"
 
       - uses: actions/upload-artifact@v2
@@ -83,7 +83,7 @@ jobs:
           choco install --no-progress ffmpeg
           $env:Path += ";" + "$($PWD)\ManimCache\LatexWindows\TinyTeX\bin\win32"
           $env:Path += ";" + "$($PWD)\ManimCache\SoX"
-          $env:Path += ";" + "$($PWD)\pango\bin"
+          dir pango
           $env:Path += ";" + "$($PWD)\pango"
           echo "::set-env name=Path::$env:Path"
       - name: Add Windows dependecies to path
@@ -103,7 +103,11 @@ jobs:
         run: |
           where libpango*
           pip install poetry
-          
+          #poetry install
+          poetry run pytest
+          curl -l https://github.com/naveen521kk/manim/raw/pango-text/example_scenes/pangoText.py -o testpan.py
+          poetry run manim testpan.py
+ 
       - uses: actions/upload-artifact@v2
         with:
          name: media.${{ matrix.msystem }}
