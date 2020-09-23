@@ -20,7 +20,10 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           install: mingw-w64-${{ matrix.arch }}-pango
-
+      - uses: actions/checkout@v2
+        with:
+          repository: naveen521kk/manim
+          ref: 'pango-text'
       - shell: msys2 {0}
         env:
           MSYSTEM: ${{ matrix.msystem }}
@@ -35,14 +38,20 @@ jobs:
          name: pango.${{ matrix.msystem }}
          path: pango
  
-      - uses: actions/checkout@v2
-        with:
-          repository: naveen521kk/manim
-          ref: 'pango-text'
       - name: Set up Python
+        if: ${{ matrix.msystem }} == "MINGW64"
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
+          architecture: 'x64'
+
+      - name: Set up Python
+        if: ${{ matrix.msystem }} == "MINGW32"
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+          architecture: 'x86'
+
       - name: Get pip cache dir
         shell: bash
         id: pip-cache-and-time
