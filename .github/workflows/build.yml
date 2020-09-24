@@ -1,6 +1,8 @@
 name: Build Pango
 
-on: [push]
+on:
+  release:
+    types: [created]
 
 jobs:
   build_bin:
@@ -93,9 +95,10 @@ jobs:
           $env:Path += ";" + "$($PWD)\pango"
           echo "::set-env name=Path::$env:Path"
       - name: Add Windows dependecies to path
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' 
         run: |
           choco install --no-progress ffmpeg
+          7z a "pango.zip" "$($PWD)\pango"
           $env:Path += ";" + "$($PWD)\ManimCache\FFmpeg\bin"
           $env:Path += ";" + "$($PWD)\ManimCache\LatexWindows\TinyTeX\bin\win32"
           $env:Path += ";" + "$($PWD)\ManimCache\SoX"
@@ -124,5 +127,27 @@ jobs:
         with:
          name: media.${{ matrix.msystem }}
          path: media
+      - name: Handle Release
+        id: create_release
+        shell: bash
+        env:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_act: ${{ github.ref }}
+        run: |
+          ref_tag=$(python -c "print('${tag_act}'.split('/')[-1])")
+          res=$(curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${access_token}" https://api.github.com/repos/naveen521kk/manim-tex/releases/tags/${ref_tag})
+          echo "${res}"
+          upload_url=$(python -c "import json;print(json.loads('''${res}''')['upload_url'])")
+          echo "::set-output name=upload_url::${upload_url}"
+      - name: Upload Release Asset
+        id: upload-release-asset-non-windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: pango.zip
+          asset_name: pangi-windows-binaires-${{ matrix.pythonarch }}.zip
+          asset_content_type: application/zip
           
           
