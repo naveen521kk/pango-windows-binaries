@@ -29,7 +29,7 @@ jobs:
           MSYSTEM: ${{ matrix.msystem }}
         run: |
           mkdir pango
-          mv "/${MSYSTEM}/bin/*.dll" "pango"
+          cp /${MSYSTEM}/bin/*.dll "pango"
           dir pango
           dir "/${MSYSTEM}"
           cmd.exe /C "echo %cd%"
@@ -117,7 +117,7 @@ jobs:
           pip install poetry
           poetry install
           poetry run pytest
-          curl -L https://raw.githubusercontent.com/naveen521kk/manim/pango-text/example_scenes/pangoText.pyy -o testpan.py
+          Invoke-WebRequest https://raw.githubusercontent.com/naveen521kk/manim/pango-text/example_scenes/pangoText.py -O testpan.py
           poetry run manim testpan.py
  
       - uses: actions/upload-artifact@v2
