@@ -40,14 +40,14 @@ jobs:
          path: pango
  
       - name: Set up Python
-        if: matrix.msystem == "MINGW64"
+        if: ${{ matrix.msystem }} == 'MINGW64'
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
           architecture: 'x64'
 
       - name: Set up Python
-        if: matrix.msystem == "MINGW32"
+        if: ${{ matrix.msystem }} == 'MINGW32'
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
