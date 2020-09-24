@@ -40,14 +40,14 @@ jobs:
          path: pango
  
       - name: Set up Python
-        if: ${{ matrix.msystem }} == 'MINGW64'
+        if: ${{ matrix.msystem }} == MINGW64
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
           architecture: 'x64'
 
       - name: Set up Python
-        if: ${{ matrix.msystem }} == 'MINGW32'
+        if: ${{ matrix.msystem }} == MINGW32
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
@@ -117,8 +117,7 @@ jobs:
           pip install poetry
           poetry install
           poetry run pytest
-          Invoke-WebRequest https://raw.githubusercontent.com/naveen521kk/manim/pango-text/example_scenes/pangoText.py -O testpan.py
-          poetry run manim testpan.py
+          
       - name: Test Pango
         env:
           POETRY_VIRTUALENVS_CREATE: $false
