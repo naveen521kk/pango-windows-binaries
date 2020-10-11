@@ -36,7 +36,7 @@ jobs:
           dir
           mv pango-* pango
           PATH=/devel/dist/glib-2.8.0/bin:$PATH ACLOCAL_FLAGS="-I /devel/dist/glib-2.8.0/share/aclocal" PKG_CONFIG_PATH=/devel/dist/glib-2.8.0/lib/pkgconfig:$PKG_CONFIG_PATH CC='gcc -mtune=pentium3' CPPFLAGS='-I/opt/gnu/include' LDFLAGS='-L/opt/gnu/lib' CFLAGS=-O meson --buildtype=release --default-library=static --prefix=$PWD\pangobuild pangobuilddir Pango
-          meson compile -C pangobuilddir
+          PATH=/devel/dist/glib-2.8.0/bin:$PATH ACLOCAL_FLAGS="-I /devel/dist/glib-2.8.0/share/aclocal" PKG_CONFIG_PATH=/devel/dist/glib-2.8.0/lib/pkgconfig:$PKG_CONFIG_PATH CC='gcc -mtune=pentium3' CPPFLAGS='-I/opt/gnu/include' LDFLAGS='-L/opt/gnu/lib' CFLAGS=-O meson compile -C pangobuilddir
           dir pango
           cmd.exe /C "echo %cd%"
 
