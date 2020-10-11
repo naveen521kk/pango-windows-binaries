@@ -35,15 +35,19 @@ jobs:
           tar xf pango.tar.xz
           dir
           mv pango-* pango
-          cp /${MSYSTEM}/bin/*.dll "pango"
+          PATH=/devel/dist/glib-2.8.0/bin:$PATH ACLOCAL_FLAGS="-I /devel/dist/glib-2.8.0/share/aclocal" PKG_CONFIG_PATH=/devel/dist/glib-2.8.0/lib/pkgconfig:$PKG_CONFIG_PATH CC='gcc -mtune=pentium3' CPPFLAGS='-I/opt/gnu/include' LDFLAGS='-L/opt/gnu/lib' CFLAGS=-O meson --buildtype=release --default-library=static --prefix=pangobuild pangobuilddir Pango
+          meson compile -C pangobuilddir
           dir pango
-          dir "/${MSYSTEM}"
           cmd.exe /C "echo %cd%"
 
       - uses: actions/upload-artifact@v2
         with:
          name: pango.${{ matrix.msystem }}
-         path: pango
+         path: pangobuild
+      - uses: actions/upload-artifact@v2
+        with:
+         name: pango.${{ matrix.msystem }}.logs
+         path: pangobuilddir
  
       - name: Set up Python
         if: ${{ matrix.msystem }} == MINGW64
