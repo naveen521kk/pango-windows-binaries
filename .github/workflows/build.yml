@@ -23,7 +23,7 @@ jobs:
         name: Setup Msys
         with:
           msystem: ${{ matrix.msystem }}
-          install: mingw-w64-${{ matrix.arch }}-pango
+          install: mingw-w64-${{ matrix.arch }}-pango mingw-w64-${{ matrix.arch }}-toolchain tar 7z
       - uses: actions/checkout@v2
         with:
           repository: naveen521kk/manim
@@ -32,7 +32,10 @@ jobs:
         env:
           MSYSTEM: ${{ matrix.msystem }}
         run: |
-          mkdir pango
+          curl -L https://ftp.gnome.org/pub/GNOME/sources/pango/1.47/pango-1.47.0.tar.xz -o pango.tar.xz
+          tar xf pango.tar.xz
+          dir
+          mv pango-* pango
           cp /${MSYSTEM}/bin/*.dll "pango"
           dir pango
           dir "/${MSYSTEM}"
