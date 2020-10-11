@@ -22,7 +22,7 @@ jobs:
         name: Setup Msys
         with:
           msystem: ${{ matrix.msystem }}
-          install: mingw-w64-${{ matrix.arch }}-pango mingw-w64-${{ matrix.arch }}-toolchain tar
+          install: mingw-w64-${{ matrix.arch }}-pango mingw-w64-${{ matrix.arch }}-toolchain tar mingw-w64-${{ matrix.arch }}-meson
       - uses: actions/checkout@v2
         with:
           repository: naveen521kk/manim
