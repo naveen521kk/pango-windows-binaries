@@ -30,15 +30,25 @@ jobs:
       - shell: msys2 {0}
         env:
           MSYSTEM: ${{ matrix.msystem }}
+          MSYS2_ARCH: ${{ matrix.arch }}
         run: |
           curl -L https://ftp.gnome.org/pub/GNOME/sources/pango/1.47/pango-1.47.0.tar.xz -o pango.tar.xz
-          tar xf pango.tar.xz
-          dir
+          tar xf pango.tar.xz          
           mv pango-* pango
-          PATH=/devel/dist/glib-2.8.0/bin:$PATH ACLOCAL_FLAGS="-I /devel/dist/glib-2.8.0/share/aclocal" PKG_CONFIG_PATH=/devel/dist/glib-2.8.0/lib/pkgconfig:$PKG_CONFIG_PATH CC='gcc -mtune=pentium3' CPPFLAGS='-I/opt/gnu/include' LDFLAGS='-L/opt/gnu/lib' CFLAGS=-O meson --buildtype=release --default-library=static --prefix=$PWD\pangobuild pangobuilddir Pango
-          PATH=/devel/dist/glib-2.8.0/bin:$PATH ACLOCAL_FLAGS="-I /devel/dist/glib-2.8.0/share/aclocal" PKG_CONFIG_PATH=/devel/dist/glib-2.8.0/lib/pkgconfig:$PKG_CONFIG_PATH CC='gcc -mtune=pentium3' CPPFLAGS='-I/opt/gnu/include' LDFLAGS='-L/opt/gnu/lib' CFLAGS=-O meson compile -C pangobuilddir
+          pacman --noconfirm -S --needed \
+            base-devel \
+            mingw-w64-$MSYS2_ARCH-gobject-introspection \
+            mingw-w64-$MSYS2_ARCH-harfbuzz \
+            mingw-w64-$MSYS2_ARCH-fontconfig \
+            mingw-w64-$MSYS2_ARCH-fribidi \
+            mingw-w64-$MSYS2_ARCH-libthai \
+            mingw-w64-$MSYS2_ARCH-cairo \
+            mingw-w64-$MSYS2_ARCH-meson \
+            mingw-w64-$MSYS2_ARCH-toolchain \
+            mingw-w64-$MSYS2_ARCH-cantarell-fonts
+          meson --buildtype=release --default-library=static --prefix=$PWD\pangobuild pangobuilddir pango
+          meson compile -C pangobuilddir
           dir pango
-          cmd.exe /C "echo %cd%"
 
       - uses: actions/upload-artifact@v2
         with:
