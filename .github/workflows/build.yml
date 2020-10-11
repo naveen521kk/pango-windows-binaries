@@ -55,6 +55,7 @@ jobs:
          name: pango.${{ matrix.msystem }}
          path: pangobuild
       - uses: actions/upload-artifact@v2
+        if: failure()
         with:
          name: pango.${{ matrix.msystem }}.logs
          path: pangobuilddir
