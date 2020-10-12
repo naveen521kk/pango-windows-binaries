@@ -47,7 +47,8 @@ jobs:
             mingw-w64-$MSYS2_ARCH-toolchain \
             mingw-w64-$MSYS2_ARCH-cantarell-fonts
           meson --buildtype=release --default-library=static --prefix=$PWD\pangobuild pangobuilddir pango
-          meson compile -C pangobuilddir
+          cd pangobuilddir
+          ninja
           dir pango
 
       - uses: actions/upload-artifact@v2
